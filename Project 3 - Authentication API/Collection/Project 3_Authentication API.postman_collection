@@ -1,0 +1,557 @@
+{
+  "info": {
+    "_postman_id": "2ae9c77c-9b3e-4a42-9de2-45d2d40527e6",
+    "name": "Authentication API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55503463",
+    "_collection_link": "https://go.postman.co/collection/55503463-2ae9c77c-9b3e-4a42-9de2-45d2d40527e6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Login-Creating Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json() //parse the response body to json\r",
+              "pm.test(\"status code validation\",()=>\r",
+              "{\r",
+              "    pm.response.to.have.status(200)\r",
+              "})\r",
+              "pm.test(\"Response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property(\"token\")\r",
+              "})\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "   pm.expect(responseData.token).to.be.a('string')\r",
+              "    })\r",
+              "pm.test(\"Business validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.token).to.exist\r",
+              "    pm.expect(responseData.token).to.not.be.empty\r",
+              "    \r",
+              "})\r",
+              "pm.collectionVariables.set(\"authtoken\",responseData.token) //store the token in a collection variable for reuse in other requests\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "free_user_3EvYGkCJmz2HWTkpM9ya4Z5Drxv",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"eve.holt@reqres.in\",\r\n  \"password\": \"cityslicka\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/login",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Negative Login-without Pw",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json();\r",
+              "pm.test(\"status code validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(400);\r",
+              "})\r",
+              "pm.test(\"response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "})\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property(\"error\");\r",
+              "})\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "pm.expect(responseData.error).to.be.a('string')\r",
+              "})\r",
+              "pm.test(\"Business validation\",()=>\r",
+              "{\r",
+              "pm.expect(responseData.error).to.exist\r",
+              "pm.expect(responseData.error).to.not.empty\r",
+              "pm.expect(responseData.error).to.eql(\"Missing password\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "free_user_3EvYGkCJmz2HWTkpM9ya4Z5Drxv",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"eve.holt@reqres.in\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/login",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Negative Login-Missing Email",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json();\r",
+              "pm.test(\"status code validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(400);\r",
+              "})\r",
+              "pm.test(\"response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "})\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property(\"error\");\r",
+              "})\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "pm.expect(responseData.error).to.be.a('string')\r",
+              "})\r",
+              "pm.test(\"Business validation\",()=>\r",
+              "{\r",
+              "pm.expect(responseData.error).to.exist\r",
+              "pm.expect(responseData.error).to.not.empty\r",
+              "pm.expect(responseData.error).to.eql(\"Missing email or username\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "free_user_3EvYGkCJmz2HWTkpM9ya4Z5Drxv",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"password\": \"cityslicka\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/login",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Register-Successful Registration",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json();\r",
+              "pm.test(\"Status code is 200\", ()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(200);\r",
+              "}\r",
+              ")\r",
+              "\r",
+              "pm.test(\"response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "})\r",
+              "\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property('id');\r",
+              "    pm.expect(responseData).to.have.property('token')\r",
+              "    pm.expect(responseData).to.have.property('_meta')\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.id).to.be.a('number')\r",
+              "    pm.expect(responseData.token).to.be.a('string')\r",
+              "    pm.expect(responseData._meta).to.be.an('object')\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business validation\",()=>{\r",
+              "    pm.expect(responseData.id).to.exist\r",
+              "    pm.expect(responseData.id).to.be.above(0)\r",
+              "    pm.expect(responseData.token).to.exist\r",
+              "    pm.expect(responseData.token).to.not.be.empty\r",
+              "})\r",
+              "\r",
+              "pm.collectionVariables.set(\"registeredUserId\",responseData.id)\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"eve.holt@reqres.in\",\r\n  \"password\": \"pistol\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/register",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Register-Failure",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json();\r",
+              "pm.test(\"Status code is 400\", ()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(400);\r",
+              "}\r",
+              ")\r",
+              "\r",
+              "pm.test(\"response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "})\r",
+              "\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property('error');\r",
+              "   \r",
+              "})\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "   \r",
+              "    pm.expect(responseData.error).to.be.a('string')\r",
+              "   \r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business validation\",()=>{\r",
+              "    pm.expect(responseData.error).to.exist\r",
+              "    pm.expect(responseData.error).to.not.be.empty\r",
+              "    pm.expect(responseData.error).to.eql(\"Missing password\")\r",
+              "})\r",
+              "\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"eve.holt@reqres.in\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/register",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delayed Response",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json();\r",
+              "pm.test(\"Status code is 200\", ()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(200);\r",
+              "}\r",
+              ")\r",
+              "\r",
+              "pm.test(\"response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(4000);\r",
+              "})\r",
+              "\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property('page');\r",
+              "    pm.expect(responseData).to.have.property('per_page');\r",
+              "    pm.expect(responseData).to.have.property('total');\r",
+              "    pm.expect(responseData).to.have.property('total_pages');\r",
+              "    pm.expect(responseData).to.have.property('data');\r",
+              "   \r",
+              "})\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "   \r",
+              "    pm.expect(responseData.page).to.be.a('number')\r",
+              "      pm.expect(responseData.per_page).to.be.a('number')\r",
+              "       pm.expect(responseData.total).to.be.a('number')\r",
+              "        pm.expect(responseData.total_pages).to.be.a('number')\r",
+              "        pm.expect(responseData.data).to.be.an('array')\r",
+              "        responseData.data.forEach(userDetail =>{\r",
+              "        pm.expect(userDetail.id).to.be.a('number')\r",
+              "        pm.expect(userDetail.email).to.be.a('string')\r",
+              "        pm.expect(userDetail.first_name).to.be.a('string')\r",
+              "        pm.expect(userDetail.last_name).to.be.a('string')\r",
+              "        pm.expect(userDetail.avatar).to.be.a('string')\r",
+              "        })\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business validation\",()=>{\r",
+              "    pm.expect(responseData.page).to.exist\r",
+              "    pm.expect(responseData.page).to.eql(1)\r",
+              "     pm.expect(responseData.per_page).to.exist\r",
+              "    pm.expect(responseData.per_page).to.eql(6)\r",
+              "     pm.expect(responseData.total).to.exist\r",
+              "    pm.expect(responseData.total).to.eql(12)\r",
+              "     pm.expect(responseData.total_pages).to.exist\r",
+              "    pm.expect(responseData.total_pages).to.eql(2)\r",
+              "    pm.expect(responseData.data).to.exist\r",
+              "    pm.expect(responseData.data).to.not.be.empty\r",
+              "    pm.expect(responseData.data.length).to.be.eql(responseData.per_page)\r",
+              "    responseData.data.forEach(userDetail =>{\r",
+              "        pm.expect(userDetail.id).to.exist\r",
+              "        pm.expect(userDetail.first_name).to.exist\r",
+              "        pm.expect(userDetail.last_name).to.exist\r",
+              "        pm.expect(userDetail.id).to.be.above(0)\r",
+              "        pm.expect(userDetail.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/)\r",
+              "        pm.expect(userDetail.first_name).to.not.be.empty\r",
+              "        pm.expect(userDetail.last_name).to.not.be.empty\r",
+              "        pm.expect(userDetail.avatar).to.match(/https?:\\/\\/.*\\.jpg$/)\r",
+              "    })\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"eve.holt@reqres.in\",\r\n  \"password\": \"pistol\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/users?delay=3",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "users"
+          ],
+          "query": [
+            {
+              "key": "delay",
+              "value": "3"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "value",
+        "value": "free_user_3EvYGkCJmz2HWTkpM9ya4Z5Drxv",
+        "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "x-api-key",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "authtoken",
+      "value": ""
+    },
+    {
+      "key": "id",
+      "value": ""
+    },
+    {
+      "key": "registeredUserId",
+      "value": ""
+    }
+  ]
+}

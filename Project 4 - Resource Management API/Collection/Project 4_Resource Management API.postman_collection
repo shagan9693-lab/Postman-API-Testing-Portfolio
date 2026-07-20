@@ -1,0 +1,629 @@
+{
+  "info": {
+    "_postman_id": "83c128dd-2f2b-46b6-a23b-a646a3774c0a",
+    "name": "Resource Management API",
+    "description": "# Project 4 – Resource Management API Testing\n\n## Objective\n\nValidate the Resource Management REST API by performing end-to-end CRUD operations and verifying response correctness using Postman.\n\n## API Operations Covered\n\n- Get All Resources\n    \n- Get Single Resource\n    \n- Get Single Resource (Negative Scenario – Resource Not Found)\n    \n- Create New Resource\n    \n- Update Resource\n    \n- Delete Resource  \n    \n\nValidations Performed\n\n- HTTP Status Code Validation  \n    \n- Response Time Validation  \n    \n- Response Structure Validation  \n    \n-   \n    Data Type Validation  \n    \n-   \n    Business Rule Validation  \n    \n-   \n    Regular Expression (Regex) Validation  \n    \n-   \n    Empty Response Validation  \n    \n-   \n    Negative API Validation (404 Not Found)  \n    \n\n## Postman Features Used\n\n-   \n    Collection Variables  \n    \n-   \n    API Chaining  \n    \n-   \n    JavaScript Test Scripts  \n    \n-   \n    Request & Response Validation  \n    \n-   \n    Dynamic Value Storage  \n    \n-   \n    Assertions using Chai Library  \n    \n\n## Business Rules Verified\n\n-   \n    Response contains expected fields.  \n    \n-   \n    Mandatory fields are present.  \n    \n-   \n    Data types are validated.  \n    \n-   \n    Resource values match expected business requirements.  \n    \n-   \n    Timestamp format validated using Regular Expressions.  \n    \n-   \n    URL format validation.  \n    \n-   \n    Hex color code validation.  \n    \n-   \n    Pantone value format validation.  \n    \n-   \n    Empty response validation for DELETE request.  \n    \n\n## Technologies Used\n\n-   \n    Postman  \n    \n-   \n    JavaScript  \n    \n-   \n    REST API  \n    \n-   \n    Chai Assertion Library",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55503463",
+    "_collection_link": "https://go.postman.co/collection/55503463-83c128dd-2f2b-46b6-a23b-a646a3774c0a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Getting All the Resources",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "pm.test(\"status code validation\",()=>\r",
+              "{\r",
+              "    pm.response.to.have.status(200)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property('page')\r",
+              "    pm.expect(responseData).to.have.property('per_page')\r",
+              "    pm.expect(responseData).to.have.property('total')\r",
+              "    pm.expect(responseData).to.have.property('total_pages')\r",
+              "    pm.expect(responseData).to.have.property('data')\r",
+              "    pm.expect(responseData).to.have.property('support')\r",
+              "    pm.expect(responseData).to.have.property('_meta')\r",
+              "    responseData.data.forEach(resourceDetails =>{\r",
+              "    pm.expect(resourceDetails).to.have.property('id')\r",
+              "    pm.expect(resourceDetails).to.have.property('name')\r",
+              "    pm.expect(resourceDetails).to.have.property('year')\r",
+              "    pm.expect(resourceDetails).to.have.property('color')\r",
+              "    pm.expect(resourceDetails).to.have.property('pantone_value')\r",
+              "    })\r",
+              "    pm.expect(responseData.support).to.have.property('url')\r",
+              "    pm.expect(responseData.support).to.have.property('text')\r",
+              "    pm.expect(responseData._meta).to.have.property('powered_by')\r",
+              "    pm.expect(responseData._meta).to.have.property('docs_url')\r",
+              "    pm.expect(responseData._meta).to.have.property('upgrade_url')\r",
+              "    pm.expect(responseData._meta).to.have.property('example_url')\r",
+              "    pm.expect(responseData._meta).to.have.property('variant')\r",
+              "    pm.expect(responseData._meta).to.have.property('message')\r",
+              "    pm.expect(responseData._meta).to.have.property('cta')\r",
+              "    pm.expect(responseData._meta.cta).to.have.property('label')\r",
+              "    pm.expect(responseData._meta.cta).to.have.property('url')\r",
+              "    pm.expect(responseData._meta).to.have.property('context')\r",
+              "    })\r",
+              "\r",
+              "    pm.test(\"Data type validation\",()=>\r",
+              "    {\r",
+              "        pm.expect(responseData.page).to.be.a('number')\r",
+              "        pm.expect(responseData.per_page).to.be.a('number')\r",
+              "        pm.expect(responseData.total).to.be.a('number')\r",
+              "        pm.expect(responseData.total_pages).to.be.a('number')\r",
+              "        pm.expect(responseData.data).to.be.an('array')\r",
+              "        pm.expect(responseData.support).to.be.an('object')\r",
+              "        responseData.data.forEach(resourceDetails =>{\r",
+              "            pm.expect(resourceDetails.id).to.be.a('number')\r",
+              "            pm.expect(resourceDetails.name).to.be.a('string')\r",
+              "            pm.expect(resourceDetails.year).to.be.a('number')\r",
+              "            pm.expect(resourceDetails.color).to.be.a('string')\r",
+              "            pm.expect(resourceDetails.pantone_value).to.be.a('string')\r",
+              "        \r",
+              "        })\r",
+              "        pm.expect(responseData.support.url).to.be.a('string')\r",
+              "        pm.expect(responseData.support.text).to.be.a('string')\r",
+              "        pm.expect(responseData._meta.powered_by).to.be.a('string')\r",
+              "        pm.expect(responseData._meta.docs_url).to.be.a('string')\r",
+              "        pm.expect(responseData._meta.upgrade_url).to.be.a('string')\r",
+              "        pm.expect(responseData._meta.example_url).to.be.a('string')\r",
+              "        pm.expect(responseData._meta.variant).to.be.a('string')\r",
+              "        pm.expect(responseData._meta.message).to.be.a('string')\r",
+              "        pm.expect(responseData._meta.cta).to.be.an('object')\r",
+              "        pm.expect(responseData._meta.cta.label).to.be.a('string')\r",
+              "        pm.expect(responseData._meta.cta.url).to.be.a('string')\r",
+              "        pm.expect(responseData._meta.context).to.be.a('string')\r",
+              "    })\r",
+              "\r",
+              "    pm.test(\"Business validation\",()=>\r",
+              "    {\r",
+              "        pm.expect(responseData.page).to.exist\r",
+              "        pm.expect(responseData.page).to.eql(1)\r",
+              "        pm.expect(responseData.per_page).to.exist\r",
+              "        pm.expect(responseData.per_page).to.eql(6)\r",
+              "        pm.expect(responseData.total).to.exist\r",
+              "        pm.expect(responseData.total).to.eql(12)\r",
+              "        pm.expect(responseData.total_pages).to.exist\r",
+              "        pm.expect(responseData.total_pages).to.eql(2)\r",
+              "        pm.expect(responseData.data.length).to.eql(responseData.per_page)\r",
+              "        responseData.data.forEach(resourceDetails =>{\r",
+              "            pm.expect(resourceDetails.id).to.exist\r",
+              "            pm.expect(resourceDetails.id).to.be.above(0)\r",
+              "            pm.expect(resourceDetails.name).to.exist\r",
+              "            pm.expect(resourceDetails.name).to.not.be.empty\r",
+              "            pm.expect(resourceDetails.year).to.exist\r",
+              "            pm.expect(resourceDetails.year).to.be.above(1999)\r",
+              "            pm.expect(resourceDetails.color).to.match(/^#[\\dA-Fa-f]{6}$/)\r",
+              "            pm.expect(resourceDetails.pantone_value).to.match(/^\\d+-\\d+$/)\r",
+              "        })\r",
+              "        pm.expect(responseData.support.url).to.match(/^https:\\/\\//)\r",
+              "        pm.expect(responseData.support.text).to.match(/^Become a better CTO/)\r",
+              "        pm.expect(responseData._meta.powered_by).to.eql(\"ReqRes\")\r",
+              "        pm.expect(responseData._meta.docs_url).to.match(/^https:\\/\\//)\r",
+              "        pm.expect(responseData._meta.upgrade_url).to.match(/^https:\\/\\//)\r",
+              "        pm.expect(responseData._meta.example_url).to.match(/^https:\\/\\//)\r",
+              "        pm.expect(responseData._meta.variant).to.eql('v1_b')\r",
+              "        pm.expect(responseData._meta.message).to.match(/^This is a read-only demo endpoint/)\r",
+              "        pm.expect(responseData._meta.cta.label).to.eql(\"Get started\")\r",
+              "        pm.expect(responseData._meta.cta.url).to.match(/^https:\\/\\//)\r",
+              "        pm.expect(responseData._meta.context).to.eql(\"legacy_success\")\r",
+              "    })\r",
+              "\r",
+              "\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://reqres.in/api/unknown",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "unknown"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Getting Single Resource",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "pm.test(\"Status code validation\",()=>\r",
+              "{\r",
+              "    pm.response.to.have.status(200)\r",
+              "})\r",
+              "pm.test(\"Response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property(\"data\")\r",
+              "    pm.expect(responseData).to.have.property(\"support\")\r",
+              "    pm.expect(responseData).to.have.property(\"_meta\")\r",
+              "    pm.expect(responseData.data).to.have.property(\"id\")\r",
+              "    pm.expect(responseData.data).to.have.property(\"name\")\r",
+              "    pm.expect(responseData.data).to.have.property(\"year\")\r",
+              "    pm.expect(responseData.data).to.have.property(\"color\")\r",
+              "    pm.expect(responseData.data).to.have.property(\"pantone_value\")\r",
+              "    pm.expect(responseData.support).to.have.property(\"url\")\r",
+              "    pm.expect(responseData.support).to.have.property(\"text\")\r",
+              "    pm.expect(responseData._meta).to.have.property(\"powered_by\")\r",
+              "    pm.expect(responseData._meta).to.have.property(\"docs_url\")\r",
+              "    pm.expect(responseData._meta).to.have.property(\"upgrade_url\")\r",
+              "    pm.expect(responseData._meta).to.have.property(\"example_url\")\r",
+              "    pm.expect(responseData._meta).to.have.property(\"variant\")\r",
+              "    pm.expect(responseData._meta).to.have.property(\"message\")\r",
+              "    pm.expect(responseData._meta).to.have.property(\"cta\")\r",
+              "    pm.expect(responseData._meta.cta).to.have.property(\"label\")\r",
+              "    pm.expect(responseData._meta.cta).to.have.property(\"url\")\r",
+              "    pm.expect(responseData._meta).to.have.property(\"context\")\r",
+              "\r",
+              "})\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "pm.expect(responseData.data).to.be.an('object')\r",
+              "pm.expect(responseData.data.id).to.be.a('number')\r",
+              "pm.expect(responseData.data.name).to.be.a('string')\r",
+              "pm.expect(responseData.data.year).to.be.a('number')\r",
+              "pm.expect(responseData.data.color).to.be.a('string')\r",
+              "pm.expect(responseData.data.pantone_value).to.be.a('string')\r",
+              "pm.expect(responseData.support).to.be.an('object')\r",
+              "pm.expect(responseData.support.url).to.be.a('string')\r",
+              "pm.expect(responseData.support.text).to.be.a('string')\r",
+              "pm.expect(responseData._meta).to.be.an('object')\r",
+              "pm.expect(responseData._meta.powered_by).to.be.a('string')\r",
+              "pm.expect(responseData._meta.docs_url).to.be.a('string')\r",
+              "pm.expect(responseData._meta.upgrade_url).to.be.a('string')\r",
+              "pm.expect(responseData._meta.example_url).to.be.a('string')\r",
+              "pm.expect(responseData._meta.variant).to.be.a('string')\r",
+              "pm.expect(responseData._meta.message).to.be.a('string')\r",
+              "pm.expect(responseData._meta.cta).to.be.an('object')\r",
+              "pm.expect(responseData._meta.cta.label).to.be.a('string')   \r",
+              "pm.expect(responseData._meta.cta.url).to.be.a('string')     \r",
+              "pm.expect(responseData._meta.context).to.be.a('string')   \r",
+              "\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business Validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.data.id).to.eql(2)\r",
+              "    pm.expect(responseData.data.name).to.eql(\"fuchsia rose\")  \r",
+              "    pm.expect(responseData.data.year).to.be.within(2000,2100)  \r",
+              "    pm.expect(responseData.data.color).to.match(/^#[a-fA-F0-9]{6}$/)      \r",
+              "    pm.expect(responseData.data.pantone_value).to.match(/^\\d+-[0-9]{4}$/)\r",
+              "    pm.expect(responseData.support.url).to.match(/^https:\\/\\//)\r",
+              "    pm.expect(responseData.support.text).to.include('Become a better CTO')\r",
+              "    pm.expect(responseData._meta.powered_by).to.eql('ReqRes')\r",
+              "    pm.expect(responseData._meta.docs_url).to.match(/^https:\\/\\//)\r",
+              "    pm.expect(responseData._meta.upgrade_url).to.match(/^https:\\/\\//)\r",
+              "    pm.expect(responseData._meta.example_url).to.match(/^https:\\/\\//)\r",
+              "    pm.expect(responseData._meta.variant).to.eql('v1_b')\r",
+              "    pm.expect(responseData._meta.message).to.include('This is a read-only demo endpoint')\r",
+              "    pm.expect(responseData._meta.cta.label).to.eql('Get started')\r",
+              "    pm.expect(responseData._meta.cta.url).to.match(/^https:\\/\\//)\r",
+              "    pm.expect(responseData._meta.context).to.eql('legacy_success')   \r",
+              "\r",
+              "})\r",
+              "pm.collectionVariables.set(\"resourceId\", responseData.data.id)\r",
+              "pm.collectionVariables.set(\"resourceName\", responseData.data.name)\r",
+              "pm.collectionVariables.set(\"resourceYear\", responseData.data.year)\r",
+              "pm.collectionVariables.set(\"resourceColor\", responseData.data.color)\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://reqres.in/api/unknown/2",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "unknown",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Negative Validation-Resource does not exist",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json();\r",
+              "pm.test(\"status code validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(404);\r",
+              "})\r",
+              "pm.test(\"response time validation\",()=>\r",
+              "{\r",
+              "pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "})\r",
+              "pm.test(\"response body should be empty\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.exist\r",
+              "    pm.expect(responseData).to.be.an('object')\r",
+              "    pm.expect(responseData).to.be.empty\r",
+              "}\r",
+              "\r",
+              ")"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://reqres.in/api/unknown/23",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "unknown",
+            "23"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create New resource",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "pm.test(\"Status code is 201\", ()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(201)\r",
+              "})\r",
+              "pm.test(\"Response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property('id')\r",
+              "    pm.expect(responseData).to.have.property('name')\r",
+              "    pm.expect(responseData).to.have.property('job')\r",
+              "    pm.expect(responseData).to.have.property('createdAt')\r",
+              "    })\r",
+              "\r",
+              "pm.test(\"data type validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.id).to.be.a('string')\r",
+              "    pm.expect(responseData.name).to.be.a('string')\r",
+              "    pm.expect(responseData.job).to.be.a('string')\r",
+              "    pm.expect(responseData.createdAt).to.be.a('string')\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.name).to.eql('Ganesh')\r",
+              "    pm.expect(responseData.job).to.eql('QA Lead')\r",
+              "    pm.expect(responseData.id).to.exist\r",
+              "    pm.expect(responseData.id).to.not.be.empty\r",
+              "    pm.expect(responseData.createdAt).to.exist\r",
+              "    pm.expect(responseData.createdAt).to.not.be.empty\r",
+              "    pm.expect(responseData.createdAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/)\r",
+              "\r",
+              "\r",
+              "})\r",
+              "\r",
+              "pm.collectionVariables.set(\"newUserId\",responseData.id)\r",
+              "pm.collectionVariables.set(\"newUserName\",responseData.name)\r",
+              "pm.collectionVariables.set(\"newUserJob\",responseData.job)\r",
+              "\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Ganesh\",\r\n    \"job\": \"QA Lead\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/users",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update resource",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "pm.test(\"Status code is 200\", ()=>{\r",
+              "    pm.expect(pm.response.code).to.eql(200)\r",
+              "})\r",
+              "pm.test(\"Response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "   pm.expect(responseData).to.have.property('name')\r",
+              "   pm.expect(responseData).to.have.property('job')\r",
+              "   pm.expect(responseData).to.have.property('updatedAt')\r",
+              "   pm.expect(responseData).to.have.property('_meta')\r",
+              "   pm.expect(responseData._meta).to.have.property('powered_by')\r",
+              "   pm.expect(responseData._meta).to.have.property('docs_url')\r",
+              "   pm.expect(responseData._meta).to.have.property('upgrade_url')    \r",
+              "   pm.expect(responseData._meta).to.have.property('example_url')        \r",
+              "   pm.expect(responseData._meta).to.have.property('variant')            \r",
+              "   pm.expect(responseData._meta).to.have.property('message')\r",
+              "   pm.expect(responseData._meta).to.have.property('cta')\r",
+              "   pm.expect(responseData._meta.cta).to.have.property('label')\r",
+              "   pm.expect(responseData._meta.cta).to.have.property('url')\r",
+              "   pm.expect(responseData._meta).to.have.property('context')               \r",
+              "})\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.name).to.be.a('string')\r",
+              "    pm.expect(responseData.job).to.be.a('string')\r",
+              "    pm.expect(responseData.updatedAt).to.be.a('string')\r",
+              "    pm.expect(responseData._meta).to.be.an('object')\r",
+              "    pm.expect(responseData._meta.powered_by).to.be.a('string')\r",
+              "    pm.expect(responseData._meta.docs_url).to.be.a('string')\r",
+              "    pm.expect(responseData._meta.upgrade_url).to.be.a('string')    \r",
+              "    pm.expect(responseData._meta.example_url).to.be.a('string')\r",
+              "    pm.expect(responseData._meta.variant).to.be.a('string')\r",
+              "    pm.expect(responseData._meta.message).to.be.a('string')\r",
+              "    pm.expect(responseData._meta.cta).to.be.an('object')\r",
+              "    pm.expect(responseData._meta.cta.label).to.be.a('string')\r",
+              "    pm.expect(responseData._meta.cta.url).to.be.a('string')\r",
+              "    pm.expect(responseData._meta.context).to.be.a('string')            \r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business Validation\",()=>{\r",
+              "    pm.expect(responseData.name).to.exist\r",
+              "    pm.expect(responseData.name).to.not.be.empty\r",
+              "    pm.expect(responseData.name).to.eql(\"Ganesh\")\r",
+              "     pm.expect(responseData.job).to.exist\r",
+              "    pm.expect(responseData.job).to.not.be.empty\r",
+              "    pm.expect(responseData.job).to.eql(\"Senior QA Lead\")\r",
+              "     pm.expect(responseData.updatedAt).to.exist\r",
+              "    pm.expect(responseData.updatedAt).to.not.be.empty\r",
+              "    pm.expect(responseData.updatedAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/)\r",
+              "    pm.expect(responseData._meta).to.exist\r",
+              "    pm.expect(responseData._meta).to.not.be.empty\r",
+              "    pm.expect(responseData._meta.powered_by).to.eql(\"ReqRes\")\r",
+              "    pm.expect(responseData._meta.docs_url).to.match(/^https:\\/\\//)\r",
+              "    pm.expect(responseData._meta.upgrade_url).to.match(/^https:\\/\\//) \r",
+              "    pm.expect(responseData._meta.example_url).to.match(/^https:\\/\\//)\r",
+              "    pm.expect(responseData._meta.variant).to.eql('v1_b')\r",
+              "    pm.expect(responseData._meta.message).to.include('This is a read-only demo endpoint')\r",
+              "    pm.expect(responseData._meta.cta.label).to.eql('Get started')\r",
+              "    pm.expect(responseData._meta.cta.url).to.match(/^https:\\/\\//)\r",
+              "    pm.expect(responseData._meta.context).to.eql('legacy_success')\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Ganesh\",\r\n    \"job\": \"Senior QA Lead\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/users/{{newUserId}}",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "users",
+            "{{newUserId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete resource",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 204\", ()=>\r",
+              "{\r",
+              "    pm.response.to.have.status(204)    \r",
+              "})\r",
+              "pm.test(\"Response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000)    \r",
+              "})\r",
+              "pm.test(\"Response body is empty\", ()=>\r",
+              "{\r",
+              "pm.expect(pm.response.text()).to.eql(\"\")\r",
+              "\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://reqres.in/api/users/{{newUserId}}",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "users",
+            "{{newUserId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "value",
+        "value": "free_user_3EvYGkCJmz2HWTkpM9ya4Z5Drxv",
+        "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "x-api-key",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "resourceId",
+      "value": ""
+    },
+    {
+      "key": "resourceName",
+      "value": ""
+    },
+    {
+      "key": "resourceYear",
+      "value": ""
+    },
+    {
+      "key": "resourceColor",
+      "value": ""
+    },
+    {
+      "key": "newUserId",
+      "value": ""
+    },
+    {
+      "key": "newUserName",
+      "value": ""
+    },
+    {
+      "key": "newUserJob",
+      "value": ""
+    }
+  ]
+}

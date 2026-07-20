@@ -1,0 +1,686 @@
+{
+  "info": {
+    "_postman_id": "9d054641-2b6c-4333-9190-b0ad0fc0268c",
+    "name": "JSONPlaceholderAPI",
+    "description": "# JSONPlaceholder API Testing using Postman\n\n## Project Overview\n\nThis project demonstrates API automation testing using Postman for the JSONPlaceholder REST API.\n\n## Covered Scenarios\n\n- GET All Posts\n    \n- GET Single Post\n    \n- POST\n    \n- PUT\n    \n- PATCH\n    \n- DELETE\n    \n- Query Parameter Validation\n    \n- Negative Testing\n    \n\n## Validations Performed\n\n- Status Code Validation\n    \n- Response Time Validation\n    \n- Response Structure Validation\n    \n- Data Type Validation\n    \n- Business Validation\n    \n- Request vs Response Validation\n    \n- Collection Variable Validation\n    \n\n## Known Limitations\n\nJSONPlaceholder is a mock REST API.\n\n- POST does not permanently create resources.\n    \n- PUT/PATCH do not permanently update resources.\n    \n- DELETE does not permanently delete resources.\n    \n- PATCH request-response validation passes when executed individually but may return the original resource during a full Collection Runner execution due to the mock API behavior.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55503463",
+    "_collection_link": "https://go.postman.co/collection/55503463-9d054641-2b6c-4333-9190-b0ad0fc0268c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get all posts",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "pm.test(\"status code\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(200)\r",
+              "})\r",
+              "pm.test(\"response time\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.below(2000)\r",
+              "})\r",
+              "pm.test(\"structure validation\",()=>{\r",
+              "pm.expect(responseData).to.be.an('array')\r",
+              "pm.expect(responseData.length).to.be.above(0)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "    responseData.forEach(postDetails =>{\r",
+              "    pm.expect(postDetails.userId).to.be.a('number')\r",
+              "    pm.expect(postDetails.id).to.be.a('number')\r",
+              "    pm.expect(postDetails.title).to.be.a('string')\r",
+              "    pm.expect(postDetails.body).to.be.a('string')\r",
+              "    })\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business validation\",()=>\r",
+              "{\r",
+              "    responseData.forEach(postDetails =>\r",
+              "    {\r",
+              "        pm.expect(postDetails.userId).to.be.above(0)\r",
+              "        pm.expect(postDetails.id).to.be.above(0)\r",
+              "        pm.expect(postDetails.title).to.not.be.empty\r",
+              "        pm.expect(postDetails.body).to.not.be.empty\r",
+              "    })\r",
+              "   \r",
+              "})\r",
+              "\r",
+              "pm.collectionVariables.set(\"postId\", responseData[0].id)"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get single Post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "pm.test(\"status ccode validation\",()=>{\r",
+              "    pm.expect(pm.response.code).to.be.eql(200)\r",
+              "})\r",
+              "pm.test(\"response time validation\",()=>{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"structure validation\",()=>{\r",
+              "    pm.expect(responseData).to.have.property(\"userId\")\r",
+              "    pm.expect(responseData).to.have.property(\"id\")\r",
+              "    pm.expect(responseData).to.have.property(\"title\")\r",
+              "    pm.expect(responseData).to.have.property(\"body\")\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>{\r",
+              "    pm.expect(responseData.userId).to.be.a('number')\r",
+              "    pm.expect(responseData.id).to.be.a('number')\r",
+              "    pm.expect(responseData.title).to.be.a('string')\r",
+              "    pm.expect(responseData.body).to.be.a('string')\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business Validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.userId).to.be.above(0)\r",
+              "    pm.expect(responseData.id).to.be.above(0)\r",
+              "    pm.expect(responseData.title).to.not.be.empty\r",
+              "    pm.expect(responseData.body).to.not.be.empty\r",
+              "}\r",
+              ")\r",
+              "\r",
+              "const postIdDetail=Number(pm.collectionVariables.get(\"postId\"))\r",
+              "\r",
+              "pm.test(\"Post ID Validation\",()=>{\r",
+              "pm.expect(responseData.id).to.eql(postIdDetail)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts/{{postId}}",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts",
+            "{{postId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create POST",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "const requestData=JSON.parse(pm.request.body.raw)\r",
+              "pm.test(\"status code validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(201)\r",
+              "\r",
+              "})\r",
+              "pm.test(\"response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"response body validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property(\"userId\")\r",
+              "    pm.expect(responseData).to.have.property(\"title\")\r",
+              "    pm.expect(responseData).to.have.property(\"body\")\r",
+              "    pm.expect(responseData).to.have.property(\"id\")\r",
+              "})\r",
+              "\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>{\r",
+              "    pm.expect(responseData.userId).to.be.a('number')\r",
+              "    pm.expect(responseData.id).to.be.a('number')\r",
+              "    pm.expect(responseData.title).to.be.a('string')\r",
+              "    pm.expect(responseData.body).to.be.a('string')\r",
+              "})\r",
+              "\r",
+              "pm.test(\"business validation\",()=>\r",
+              "{\r",
+              " pm.expect(responseData.userId).to.be.above(0)\r",
+              " pm.expect(responseData.id).to.be.above(0)\r",
+              " pm.expect(responseData.title).to.not.be.empty\r",
+              " pm.expect(responseData.body).to.not.be.empty\r",
+              "\r",
+              "})\r",
+              "\r",
+              "pm.test(\"request and response validation\",()=>\r",
+              "{\r",
+              "pm.expect(responseData.userId).to.eql(requestData.userId)\r",
+              "pm.expect(responseData.title).to.eql(requestData.title)\r",
+              "pm.expect(responseData.body).to.eql(requestData.body)\r",
+              "})\r",
+              "\r",
+              "pm.collectionVariables.set(\"newPostId\",responseData.id)\r",
+              "\r",
+              "\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"userId\": 1,\r\n    \"title\": \"API Testing using Postman\",\r\n    \"body\": \"Learning API automation step by step.\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "const requestData=JSON.parse(pm.request.body.raw)\r",
+              "pm.test(\"status code validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(200)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"response time validation\",()=>\r",
+              "{\r",
+              "   pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "    })\r",
+              "\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property(\"userId\")\r",
+              "    pm.expect(responseData).to.have.property(\"title\")\r",
+              "    pm.expect(responseData).to.have.property(\"body\")\r",
+              "    pm.expect(responseData).to.have.property(\"id\")\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.userId).to.be.a('number')\r",
+              "    pm.expect(responseData.title).to.be.a('string')\r",
+              "    pm.expect(responseData.body).to.be.a('string')\r",
+              "    pm.expect(responseData.id).to.be.a('number')\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business validation\",()=>\r",
+              "{\r",
+              "    pm.expect(Number(responseData.userId)).to.be.above(0)\r",
+              "    pm.expect(Number(responseData.id)).to.be.above(0)\r",
+              "    pm.expect(responseData.title).to.be.not.empty\r",
+              "    pm.expect(responseData.body).to.be.not.empty\r",
+              "\r",
+              "})\r",
+              "\r",
+              "pm.test(\"request and response validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.userId).to.eql(requestData.userId)\r",
+              "    pm.expect(responseData.title).to.eql(requestData.title)\r",
+              "    pm.expect(responseData.body).to.eql(requestData.body)\r",
+              "\r",
+              "})\r",
+              "\r",
+              "const postIdValue=Number(pm.collectionVariables.get(\"postId\"))\r",
+              "pm.expect(postIdValue).to.eql(responseData.id)"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"userId\": 1,\r\n    \"title\": \"Updated Title by ganesh\",\r\n    \"body\": \"Updated Body\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts/{{postId}}",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts",
+            "{{postId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Patch post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "const requestData=JSON.parse(pm.request.body.raw)\r",
+              "pm.test(\"Status code is 200\", ()=> {\r",
+              "pm.expect(pm.response.code).to.eql(200)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Response time is less than 200ms\", () => {\r",
+              "\r",
+              "pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.have.property('userId')\r",
+              "    pm.expect(responseData).to.have.property('id')\r",
+              "    pm.expect(responseData).to.have.property('title')\r",
+              "    pm.expect(responseData).to.have.property('body')\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.userId).to.be.a('number')\r",
+              "    pm.expect(responseData.title).to.be.a('string')\r",
+              "    pm.expect(responseData.body).to.be.a('string')\r",
+              "    pm.expect(responseData.id).to.be.a('number')\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business validation\",()=>\r",
+              "{\r",
+              "    pm.expect(Number(responseData.userId)).to.be.above(0)\r",
+              "    pm.expect(Number(responseData.id)).to.be.above(0)\r",
+              "    pm.expect(responseData.title).to.be.not.empty\r",
+              "    pm.expect(responseData.body).to.be.not.empty\r",
+              "\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Request and response validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.title).to.eql(requestData.title)\r",
+              "})\r",
+              "\r",
+              "const postIdDetail=Number(pm.collectionVariables.get(\"postId\"))\r",
+              "pm.test(\"ID validation\",()=>{\r",
+              "    pm.expect(postIdDetail).to.eql(responseData.id) \r",
+              "})\r",
+              "\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"API Testing using PATCH\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts/{{postId}}",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts",
+            "{{postId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Query Parameter",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json();\r",
+              "pm.test(\"status code validation\",()=>\r",
+              "{\r",
+              "pm.expect(pm.response.code).to.eql(200)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Response time validation\",()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Response is an array\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.be.an('array')\r",
+              "    \r",
+              "})\r",
+              "\r",
+              "pm.test(\"Array length greater than 0\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData.length).to.be.above(0)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"structure validation\",()=>\r",
+              "{\r",
+              "     responseData.forEach(queryDetails =>{\r",
+              "pm.expect(queryDetails).to.have.property('userId')\r",
+              "pm.expect(queryDetails).to.have.property('id')\r",
+              "pm.expect(queryDetails).to.have.property('title')\r",
+              "pm.expect(queryDetails).to.have.property('body')\r",
+              "     })\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "\r",
+              "responseData.forEach(queryDetails =>{\r",
+              "pm.expect(queryDetails.userId).to.be.a('number')\r",
+              "pm.expect(queryDetails.id).to.be.a('number')\r",
+              "pm.expect(queryDetails.title).to.be.a('string')\r",
+              "pm.expect(queryDetails.body).to.be.a('string')\r",
+              "})\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Business validation\",()=>\r",
+              "{\r",
+              "    responseData.forEach(queryDetails =>{\r",
+              "    pm.expect(queryDetails.userId).to.be.above(0)\r",
+              "    pm.expect(queryDetails.id).to.be.above(0)\r",
+              "    pm.expect(queryDetails.title).to.exist\r",
+              "    pm.expect(queryDetails.title).to.not.be.empty\r",
+              "    pm.expect(queryDetails.body).to.exist\r",
+              "    pm.expect(queryDetails.body).to.not.be.empty\r",
+              "    })\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Query parameter validation\",()=>\r",
+              "{\r",
+              "    responseData.forEach(queryDetails =>{\r",
+              "        pm.expect(queryDetails.userId).to.equal(1)\r",
+              "    })\r",
+              "})\r",
+              "\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts?userId=1",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Invalid Post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "pm.test(\"Status code is 404\", ()=>\r",
+              "{\r",
+              "    pm.expect(pm.response.code).to.eql(404);\r",
+              "})\r",
+              "pm.test(\"Response time validation\",()=>\r",
+              "{\r",
+              "pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.be.an('object')\r",
+              "})\r",
+              "pm.test(\"Response body is empty\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.be.empty\r",
+              "})\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts/999999",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts",
+            "999999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData=pm.response.json()\r",
+              "pm.test(\"Status code is 200\",()=>\r",
+              "{\r",
+              "    pm.response.to.have.status(200);\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Response time validation\",()=>\r",
+              "{\r",
+              "pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+              "})\r",
+              "pm.test(\"Data type validation\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.be.an('object')\r",
+              "})\r",
+              "pm.test(\"Response body is empty\",()=>\r",
+              "{\r",
+              "    pm.expect(responseData).to.be.empty\r",
+              "})\r",
+              "\r",
+              "pm.collectionVariables.unset(\"postId\")\r",
+              "pm.collectionVariables.unset(\"newPostId\")\r",
+              "pm.collectionVariables.unset(\"deletePostId\")"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set(\"deletePostId\",20)"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts/{{deletePostId}}}}",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts",
+            "{{deletePostId}}}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
