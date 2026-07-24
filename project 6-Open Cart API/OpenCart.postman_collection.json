@@ -25,6 +25,7 @@
               "})\r",
               "pm.test(\"Structure validation\",()=>\r",
               "{\r",
+
               "    pm.expect(responseData).to.have.property(\"success\")\r",
               "    pm.expect(responseData).to.have.property(\"api_token\")\r",
               "})\r",
@@ -582,7 +583,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": ""
+      "value": "http://192.168.0.4/upload/index.php?route="
     }
   ]
 }
